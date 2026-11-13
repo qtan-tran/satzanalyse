@@ -33,7 +33,7 @@ When citing or reusing, credit: "satzanalyse – Quoc-Tan Tran, https://github.c
 
 ## 4. Dictionary and packaged data
 
-`data/dict.js` (Part 2) packages the **core dictionary of 6,207 classical Greek words**, compiled from three open sources:
+`assets/dict.js` (Part 2) packages the **core dictionary of 6,207 classical Greek words**, compiled from three open sources:
 
 | Source | Contribution | License |
 | --- | --- | --- |
@@ -41,9 +41,9 @@ When citing or reusing, credit: "satzanalyse – Quoc-Tan Tran, https://github.c
 | DCC Greek Core Vocabulary (Dickinson College Commentaries) | 500 editorially curated core words: glosses, gender, POS | CC BY-SA |
 | Middle Liddell (Middle Liddell TEI export) | genitive endings, grammatical gender, gloss fallback | Public domain |
 
-The dictionary file (`lemma \t stem(s) \t pos \t gloss` per line) is a derivative data compilation: lemma forms and glosses derive from these sources, so `data/dict.js` is published under **CC BY-SA 4.0**, consistent with its inputs, with attribution in the file header comment and in this section. The build script (`build_greek_dict.py`) that compiles it from the three sources is kept outside the site data and documented separately; the compiled `data/dict.js` in this repository is the single packaged artifact.
+The dictionary file (`lemma \t stem(s) \t pos \t gloss` per line) is a derivative data compilation: lemma forms and glosses derive from these sources, so `assets/dict.js` is published under **CC BY-SA 4.0**, consistent with its inputs, with attribution in the file header comment and in this section. The build script (`build_greek_dict.py`) that compiles it from the three sources is kept outside the site data and documented separately; the compiled `assets/dict.js` in this repository is the single packaged artifact.
 
-- `data/morph.js` (Part 2): the closed-class form table and the ending tables are **entirely original**, compiled from standard Greek grammar (inflection endings are grammatical facts, not a creative work). Published as CC BY-SA 4.0 with the content layer, independent of external sources.
+- `assets/morph.js` (Part 2): the closed-class form table and the ending tables are **entirely original**, compiled from standard Greek grammar (inflection endings are grammatical facts, not a creative work). Published as CC BY-SA 4.0 with the content layer, independent of external sources.
 - `data/corpus.js` (Part 3): sample sentences from **public-domain texts** (John's Gospel, Xenophon) with hand analyses **compiled for this project**. Published as CC BY-SA 4.0 with the content layer.
 
 Note: the general rule in §2 ("never leak a compiled source's name") applies to regular published content (frames, patterns, corpus); the dictionary sources in this section are the deliberate, transparently attributed exception.

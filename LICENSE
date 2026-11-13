@@ -25,5 +25,5 @@ SOFTWARE.
 Note: the MIT license applies to the CODE of this repository (HTML/JS/CSS of
 the tool and the exporters). CONTENT (docs, analysis frames, sample corpus)
 is licensed CC BY-SA 4.0: https://creativecommons.org/licenses/by-sa/4.0/
-The packaged dictionary in data/dict.js additionally builds on CC BY-SA and
+The packaged dictionary in assets/dict.js additionally builds on CC BY-SA and
 public-domain sources; see docs/COPYRIGHT.md for attribution details.

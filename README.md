@@ -31,10 +31,10 @@ This repository is developed and maintained by **Quoc-Tan Tran**, **Postdoctoral
 index.html            Main tool
 guide.html            Usage guide + how to export a PDF
 corpus.html           Sample corpus (Part 3): fully analysed sentences as worked examples
-assets/               style.css + engine.js + exporter-html.js + exporter-tex.js
-data/                 data/dict.js (Part 2) – core dictionary, client-side embedded TSV
-                      data/morph.js (Part 2) – morphology tables: closed-class + endings per class
-                      data/corpus.js (Part 3) – sample sentences, hand analysis + fill data
+assets/               style.css + dict.js (Part 2: core dictionary, client-side embedded TSV)
+                      + morph.js (Part 2: morphology tables, closed-class + endings per class)
+                      + engine.js + exporter-html.js + exporter-tex.js
+data/                 corpus.js (Part 3) – sample sentences, hand analysis + fill data
 docs/                 ARCHITECTURE · ROADMAP · COPYRIGHT · FORMAT-SPEC · STYLE-AND-CONVENTIONS
 ```
 
@@ -46,6 +46,6 @@ See `docs/ROADMAP.md`: Part 1 frame + shell + docs ✅ → Part 2 core dictionar
 
 - **Code**: MIT (see `LICENSE`).
 - **Content** (docs, analysis frames, corpus): CC BY-SA 4.0 – https://creativecommons.org/licenses/by-sa/4.0/
-- **Dictionary data** in `data/dict.js` builds on the Perseus Vocabulary Tool (CC BY-SA), the DCC Greek Core Vocabulary (CC BY-SA) and Middle Liddell (public domain); attribution is kept in the file header and in `docs/COPYRIGHT.md`.
+- **Dictionary data** in `assets/dict.js` builds on the Perseus Vocabulary Tool (CC BY-SA), the DCC Greek Core Vocabulary (CC BY-SA) and Middle Liddell (public domain); attribution is kept in the file header and in `docs/COPYRIGHT.md`.
 
 When citing or reusing, credit: "satzanalyse – Quoc-Tan Tran, https://github.com/qtan-tran/satzanalyse, CC BY-SA 4.0 (content) + MIT (code)".

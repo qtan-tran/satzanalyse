@@ -3,9 +3,9 @@
  * tokenisation. Philosophy: NEVER FABRICATE ANALYSIS – the tool only
  * produces a predetermined frame; anything it cannot determine is left
  * blank for the learner to fill in.
- * Dictionary (Part 2, data/dict.js, optional): a lookup hit pre-fills the
+ * Dictionary (Part 2, assets/dict.js, optional): a lookup hit pre-fills the
  * gloss; a miss or an ambiguous form stays blank – no guessing.
- * Morphology hints (Part 2, data/morph.js, optional): closed-class forms
+ * Morphology hints (Part 2, assets/morph.js, optional): closed-class forms
  * are certain; ending guesses are marked with "?" for the learner to verify.
  * Code: MIT License. ES5, no dependencies, runs fully client-side. */
 var SA = (function () {

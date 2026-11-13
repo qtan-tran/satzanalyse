@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guide – satzanalyse</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="page">
+
+<header class="site">
+  <h1><a href="index.html">satzanalyse</a></h1>
+  <p class="tagline">Ancient Greek sentence analysis – paste Greek text, get an analysis worksheet as HTML + LaTeX</p>
+  <nav class="site">
+    <a href="index.html">Tool</a>
+    <a href="guide.html" aria-current="page">Guide</a>
+    <a href="corpus.html">Corpus</a>
+    <a href="https://qtan-tran.github.io/ancient-greek-toolkit/" target="_blank">Toolkit ↗</a>
+    <a href="https://qtan-tran.github.io/satzanalyse-vn/" target="_blank">VN edition ↗</a>
+    <a href="https://github.com/qtan-tran/satzanalyse" target="_blank">GitHub ↗</a>
+  </nav>
+</header>
+
+<h2 class="sec">1. Workflow</h2>
+<ul class="flow">
+  <li><b>Paste</b> your Greek text into the box on the <a href="index.html">Tool</a> page (keep all accents and breathings).</li>
+  <li><b>Build the frame</b>: the tool splits the text into sentences (at <span class="gk">. · ; !</span> and line breaks), tokenises it into word blocks, and generates two files: a self-contained HTML worksheet and a <code>.tex</code> (LaTeX) source.</li>
+  <li><b>Fill it in</b>: the blank cells are the point of the method – the tool never fabricates an analysis. You assign the sentence function to each word block (following the colours in the legend), fill in the morphological forms, the verb table, the glosses, the sense-group table and the translations.</li>
+  <li><b>Export a PDF</b> using one of the two methods in section 3 below.</li>
+</ul>
+
+<h2 class="sec">2. Structure of the analysis frame</h2>
+<h3 class="subsec">PART 1 – Sentence-by-sentence analysis</h3>
+<ul class="flow">
+  <li>One frame per sentence: a <b>three-layer word-block diagram</b> (function – word – form). The function cell is blank <span class="gk">…</span> for you to assign; the form cell carries a morphology hint: closed-class forms (articles, familiar pronouns, εἰμί) are certain; particles/conjunctions/prepositions/adverbs read "invariable"; ending guesses end with "?" – verify them; "(form?)" = the tool could not guess, fill it in yourself.</li>
+  <li><b>"Translation by sense groups" table</b>: the sentence is pre-split into chunks of about four words so you can see how the sense groups connect before translating the whole sentence. The default split is mechanical – regroup it by meaning; the two meaning columns are yours to fill in.</li>
+  <li><b>Verb table</b> with 8 columns (form | lemma | person | number | tense | mood | voice | subject): enter every finite verb form of the sentence; if the subject is not written out, note "inside the verb ending (person … number …)".</li>
+  <li><b>Seven steps</b>: each step is pre-filled with its method prompt (find the verbs → subjects → word blocks → government → AcI → negation → translate). Work through them directly inside the frame.</li>
+  <li><b>Translation</b>: literal version (wörtlich) → natural version (natürlich). After the last sentence comes the "Full translation" box.</li>
+</ul>
+<h3 class="subsec">PART 2 – Vocabulary and patterns</h3>
+<ul class="flow">
+  <li><b>Vocabulary table</b>: every word in order of appearance, without duplicates. The lemma/POS/gloss columns are <b>pre-filled when the dictionary finds the word</b> (marked ★); blank cells = not found (an inflected form outside the dictionary, a proper name, or a form that stays ambiguous between several words) – look it up and fill it in. The "Suggested form" column guesses the morphology ("?" = verify).</li>
+  <li><b>Pattern boxes</b>: three empty boxes (Example → Rule → Recognition tip) to extract a pattern you can transfer to other examples.</li>
+  <li><b>Endings table</b>: pre-filled with the endings recognised in the text (ending, what it identifies, examples). Every row is a suggestion to verify; closed-class forms and indeclinable words have no ending, so they never appear here. Space remains for you to add more.</li>
+</ul>
+
+<h2 class="sec">3. Exporting a PDF yourself</h2>
+<p>satzanalyse <b>does not render PDFs itself</b>. The two methods below give the best results:</p>
+<h3 class="subsec">Method A – print the HTML file from the browser (fastest)</h3>
+<ul class="flow">
+  <li>Open the downloaded <code>satzanalyse.html</code> in a browser (Chrome/Edge/Firefox).</li>
+  <li>Press <kbd>Ctrl</kbd>+<kbd>P</kbd> (Windows/Linux) or <kbd>Cmd</kbd>+<kbd>P</kbd> (macOS), choose <b>Save as PDF</b>.</li>
+  <li>The print CSS is already set up: one sentence per page, frames never split across pages.</li>
+</ul>
+<h3 class="subsec">Method B – compile the .tex file on Overleaf (highest quality)</h3>
+<ul class="flow">
+  <li>Open <a href="https://www.overleaf.com" target="_blank">overleaf.com</a> → <b>New Project → Blank Project</b>, name it as you like.</li>
+  <li>Upload <code>satzanalyse.tex</code> to the project (Upload button) or use "Copy .tex content" on the Tool page and paste it into <code>main.tex</code>.</li>
+  <li>Menu <b>Settings → Compiler</b>: choose <b>XeLaTeX</b> (required – the .tex uses fontspec with FreeSerif/DejaVu, both available in Overleaf's TeX Live).</li>
+  <li>Press <b>Recompile</b> twice so the longtable stabilises → download the PDF.</li>
+  <li>Local compilation: run <code>xelatex satzanalyse.tex</code> twice (needs TeX Live/XeLaTeX plus the FreeSerif and DejaVu fonts).</li>
+</ul>
+<div class="hint">In the .tex file the translation line keeps the markers <b>wörtlich</b> (literal version) and <b>natürlich</b> (natural version) of the original Satzanalyse format.</div>
+
+<h2 class="sec">4. Limits & friendly errors</h2>
+<ul class="flow">
+  <li><b>1,500 characters</b> (≈ 15–20 sentences) per run – the counter sits directly under the text box; over the limit the tool shows an error and suggests splitting the text.</li>
+  <li>The tool only accepts Greek characters: pasting purely Latin text gives a warning.</li>
+  <li>Your input is normalised to Unicode NFC, so text with decomposed accents (or copied from a source with inconsistent encoding) still matches the dictionary and renders cleanly.</li>
+  <li><b>Integrated dictionary</b> (Part 2): when a word is not found directly, the tool tries to <b>guess it back to the dictionary</b> by stripping a case/personal ending and the ἐ- augment; when exactly one lemma matches, it pre-fills the gloss with the label "(ending stripped)" (the meaning is right, but the base form is a suggestion – verify); when nothing or several lemmas match, it <b>does not guess</b> – the cell stays blank.</li>
+  <li><b>Morphology hints</b> (Part 2): closed-class forms are recognised with certainty; every ending-based guess carries a "?" so you verify it; indeclinable words read "invariable".</li>
+</ul>
+
+<h2 class="sec">5. Feature roadmap</h2>
+<ul class="flow">
+  <li><b>Part 2 – dictionary + morphology</b>: the client-side core dictionary of ~6,200 classical Greek words (built from the Perseus Vocabulary Tool, the DCC Greek core list and Middle Liddell; see <code>docs/COPYRIGHT.md</code>) with explicit stems and part-of-speech classes; morphology hint tables covering nouns (all three declensions), verbs (thematic, contract, -μι), participles and the perfect.</li>
+  <li><b>Part 3 – sample corpus</b>: fully analysed sentences from John's Gospel and Xenophon (easy prose) as worked examples: see <code>corpus.html</code>.</li>
+  <li>Details: <code>docs/ROADMAP.md</code> in the GitHub repository.</li>
+</ul>
+
+<footer class="site">
+  satzanalyse · Compiled by Quoc-Tan Tran · Content CC BY-SA 4.0 · Code MIT<br>
+  When citing or reusing, credit: "satzanalyse – Quoc-Tan Tran, https://github.com/qtan-tran/satzanalyse"
+</footer>
+
+</div>
+</body>
+</html>

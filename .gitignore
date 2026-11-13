@@ -1,0 +1,19 @@
+# Operating system
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors
+*.swp
+*~
+.vscode/
+.idea/
+
+# Temp (this is a no-build project)
+node_modules/
+*.tmp
+*.log
+
+# User-generated analysis output (not committed)
+satzanalyse.html
+satzanalyse.tex

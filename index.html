@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>satzanalyse – Ancient Greek sentence analysis</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="page">
+
+<header class="site">
+  <h1><a href="index.html">satzanalyse</a></h1>
+  <p class="tagline">Ancient Greek sentence analysis – paste Greek text, get an analysis worksheet as HTML + LaTeX</p>
+  <nav class="site">
+    <a href="index.html" aria-current="page">Tool</a>
+    <a href="guide.html">Guide</a>
+    <a href="corpus.html">Corpus</a>
+    <a href="https://qtan-tran.github.io/ancient-greek-toolkit/" target="_blank">Toolkit ↗</a>
+    <a href="https://qtan-tran.github.io/satzanalyse-vn/" target="_blank">VN edition ↗</a>
+    <a href="https://github.com/qtan-tran/satzanalyse" target="_blank">GitHub ↗</a>
+  </nav>
+</header>
+
+<h2 class="sec">Enter text</h2>
+
+<div class="hint">Paste Ancient Greek (keep the accents, max <b>1,500 characters</b> ≈ 15–20 sentences per run). The tool generates an <b>analysis worksheet for you to fill in</b> – the blank cells are the parts you must analyse; the tool never fabricates an analysis.
+Want a fully completed frame (functions + colours + sense-group translations + exact morphology)? Ask for an analysis directly in the chat and receive a pre-filled frame. How to export a PDF? See the <a href="guide.html">Guide</a> page. No text to try? Press <b>Try a sample sentence</b>.</div>
+
+<div class="err" id="err"></div>
+<div class="ok" id="ok"></div>
+
+<label for="f-text">Original text <span class="gk">(ἀρχαῖα ἑλληνικά)</span></label>
+<textarea id="f-text" spellcheck="false" placeholder="Paste your Greek text here…"></textarea>
+<div class="counter" id="counter">0 / 1500 characters</div>
+
+<div class="actions">
+  <button id="btn-run">Build analysis frame</button>
+  <button id="btn-example" class="ghost">Try a sample sentence</button>
+</div>
+
+<h2 class="sec">Result</h2>
+
+<div class="summary" id="summary" style="display:none"></div>
+<div class="actions" id="dl-actions" style="display:none">
+  <button id="btn-dl-html">Download satzanalyse.html</button>
+  <button id="btn-dl-tex" class="ghost">Download satzanalyse.tex</button>
+  <button id="btn-copy-tex" class="ghost">Copy .tex content</button>
+  <button id="btn-open-tab" class="ghost">Open frame in a new tab</button>
+</div>
+<p class="note" id="preview-note" style="display:none">Preview of the HTML export below; press <b>Open frame in a new tab</b> to read it in its own window.</p>
+<iframe id="preview" title="Analysis frame preview" style="display:none"></iframe>
+
+<h2 class="sec">Quick legend</h2>
+<div class="box">
+  <div class="bt">14 sentence functions (standard colours used in every frame)</div>
+  <div class="bb">
+    <div class="chips" id="chips"></div>
+    Each word block in the diagram has three layers: <b>sentence function</b> (top) – <b>word</b> (middle) – <b>morphological form</b> (bottom).
+    A blank function cell (<span class="gk">…</span>) is where you assign the function after analysing.
+    Reading a word block: the English gloss appears under the word when the dictionary finds it (the label "(ending stripped)" = guessed back to the dictionary – verify); the form cell: "?" = guessed from an ending (verify), "invariable" = does not decline (certain), "(form?)" = not guessed.
+    Details: the <a href="guide.html">Guide</a> page.
+  </div>
+</div>
+
+<footer class="site">
+  satzanalyse · Compiled by Quoc-Tan Tran · Content CC BY-SA 4.0 · Code MIT<br>
+  When citing or reusing, credit: "satzanalyse – Quoc-Tan Tran, https://github.com/qtan-tran/satzanalyse"
+</footer>
+
+</div>
+
+<script src="assets/dict.js"></script>
+<script src="assets/morph.js"></script>
+<script src="assets/engine.js"></script>
+<script src="assets/exporter-html.js"></script>
+<script src="assets/exporter-tex.js"></script>
+<script>
+(function () {
+  'use strict';
+  var elText = document.getElementById('f-text');
+  var elCounter = document.getElementById('counter');
+  var elErr = document.getElementById('err');
+  var elOk = document.getElementById('ok');
+  var elSummary = document.getElementById('summary');
+  var elActions = document.getElementById('dl-actions');
+  var elPreviewNote = document.getElementById('preview-note');
+  var elPreview = document.getElementById('preview');
+  var elChips = document.getElementById('chips');
+  var lastHTML = '', lastTEX = '', lastName = 'satzanalyse', tabURL = null;
+
+  /* Sample text: John 1:1 (public domain). */
+  var SAMPLE_TEXT = 'ἐν ἀρχῇ ἦν ὁ λόγος, καὶ ὁ λόγος ἦν πρὸς τὸν θεόν, καὶ θεὸς ἦν ὁ λόγος.';
+
+  document.getElementById('btn-example').addEventListener('click', function () {
+    elText.value = SAMPLE_TEXT;
+    countChars();
+    elText.focus();
+  });
+
+  /* Function colour chips on the tool page */
+  elChips.innerHTML = SA.FN.map(function (f) {
+    return '<span class="chip" style="color:' + SA.COLORS[f.k] + '">' + f.en + '</span>';
+  }).join('');
+
+  function countChars() {
+    var n = Array.from(elText.value.trim()).length;
+    var over = n > SA.LIMIT;
+    elCounter.textContent = n + ' / ' + SA.LIMIT + ' characters';
+    elCounter.className = 'counter' + (over ? ' over' : '');
+    elText.className = over ? 'over' : '';
+  }
+  elText.addEventListener('input', countChars);
+  elText.addEventListener('keydown', function (e) {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+      e.preventDefault();
+      document.getElementById('btn-run').click();
+    }
+  });
+  countChars();
+
+  function fail(msg) {
+    elErr.textContent = msg;
+    elErr.style.display = 'block';
+    elOk.style.display = 'none';
+    elSummary.style.display = 'none';
+    elActions.style.display = 'none';
+    elPreviewNote.style.display = 'none';
+    elPreview.style.display = 'none';
+  }
+
+  function succeed(msg) {
+    elOk.textContent = msg;
+    elOk.style.display = 'block';
+    elErr.style.display = 'none';
+  }
+
+  function download(name, content, mime) {
+    var blob = new Blob([content], { type: mime + ';charset=utf-8' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 5000);
+  }
+
+  document.getElementById('btn-run').addEventListener('click', function () {
+    var model = SA.analyze(elText.value, {});
+    if (!model.ok) {
+      if (model.code === 'empty') {
+        fail('No text yet. Paste your Ancient Greek into the "Original text" box, then press "Build analysis frame".');
+      } else if (model.code === 'limit') {
+        fail('Your text has ' + model.chars + ' characters, over the ' + SA.LIMIT +
+             ' character limit of one analysis run (so the exported frame stays manageable). Please split the text into smaller portions – about 15–20 sentences each – and analyse them one by one.');
+      } else if (model.code === 'nogreek') {
+        fail('No Greek characters found in the text. Please check: the input must be Ancient Greek (accents included).');
+      }
+      return;
+    }
+    lastHTML = SA_HTML.build(model);
+    lastTEX = SA_TEX.build(model);
+    lastName = 'satzanalyse'; /* default file name */
+
+    var nTok = 0;
+    model.sentences.forEach(function (s) { nTok += s.tokens.length; });
+    var nHit = model.vocab.filter(function (t) { return SA.dictLookup(t); }).length;
+    var nMorph = model.vocab.filter(function (t) { return SA.morphLookup(t, SA.dictLookup(t)); }).length;
+    succeed('Received: ' + model.sentences.length + ' sentence(s) · ' + nTok + ' word blocks · ' +
+            model.vocab.length + ' vocabulary items (unique, in order of appearance), dictionary hits ' + nHit +
+            ', morphology hints ' + nMorph + '. Both files are ready to download.');
+
+    elSummary.textContent = 'Exports: ' + lastName + '.html (analysis frame, fill in and print to PDF via the browser) · ' +
+                            lastName + '.tex (compile via XeLaTeX/Overleaf).';
+    elSummary.style.display = 'block';
+    elActions.style.display = 'block';
+    elPreviewNote.style.display = 'block';
+    elPreview.style.display = 'block';
+    elPreview.srcdoc = lastHTML; /* srcdoc instead of a blob URL: renders under
+      restrictive CSP (e.g. embedded previews) exactly like on file:// */
+  });
+
+  document.getElementById('btn-open-tab').addEventListener('click', function () {
+    if (!lastHTML) return;
+    if (tabURL) { URL.revokeObjectURL(tabURL); }
+    tabURL = URL.createObjectURL(new Blob([lastHTML], { type: 'text/html;charset=utf-8' }));
+    window.open(tabURL, '_blank');
+  });
+
+  document.getElementById('btn-dl-html').addEventListener('click', function () {
+    download(lastName + '.html', lastHTML, 'text/html');
+  });
+  document.getElementById('btn-dl-tex').addEventListener('click', function () {
+    download(lastName + '.tex', lastTEX, 'application/x-tex');
+  });
+  document.getElementById('btn-copy-tex').addEventListener('click', function () {
+    var btn = this;
+    function done() {
+      var old = btn.textContent;
+      btn.textContent = 'Copied ✓';
+      setTimeout(function () { btn.textContent = old; }, 1600);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(lastTEX).then(done);
+    } else {
+      var ta = document.createElement('textarea');
+      ta.value = lastTEX;
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); done(); } catch (e) {}
+      document.body.removeChild(ta);
+    }
+  });
+})();
+</script>
+</body>
+</html>
